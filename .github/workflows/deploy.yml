@@ -1,0 +1,40 @@
+name: Deploy to Zephyr
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      ZE_SECRET_TOKEN: ${{ secrets.ZE_SECRET_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Zephyr reads git metadata (org, project, branch)
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # The remote must be deployed first so the host can resolve it.
+      - name: Build and deploy remote
+        run: npm run build -w remote
+
+      - name: Build and deploy host
+        run: npm run build -w host
