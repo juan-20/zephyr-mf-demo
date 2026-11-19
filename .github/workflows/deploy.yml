@@ -16,8 +16,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      ZE_SECRET_TOKEN: ${{ secrets.ZE_SECRET_TOKEN }}
+      ZE_CI_TOKEN: ${{ secrets.ZE_CI_TOKEN }}
     steps:
+      # The Zephyr plugin only logs auth errors and exits 0, so fail loudly here.
+      - name: Require Zephyr CI token
+        run: test -n "$ZE_CI_TOKEN" || { echo "ZE_CI_TOKEN secret is not set"; exit 1; }
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Zephyr reads git metadata (org, project, branch)

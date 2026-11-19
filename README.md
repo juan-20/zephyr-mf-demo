@@ -56,7 +56,7 @@ npm run build -w remote    # remote first, so the host can resolve it
 npm run build -w host
 ```
 
-For CI, add a Zephyr token as the repository secret `ZE_SECRET_TOKEN`.
+For CI, create a token in the Zephyr dashboard (Settings → Tokens → CI Tokens) and add it as the repository secret `ZE_CI_TOKEN`.
 
 ## Technical decisions
 
@@ -72,7 +72,7 @@ For CI, add a Zephyr token as the repository secret `ZE_SECRET_TOKEN`.
 
 ## Problems found along the way
 
-- **`ZE10018` (auth missing):** the first build ran without a Zephyr login. Fixed by signing in from an interactive terminal (or `ZE_SECRET_TOKEN` in CI).
+- **`ZE10018` (auth missing):** the first build ran without a Zephyr login. Fixed by signing in from an interactive terminal (or `ZE_CI_TOKEN` in CI).
 - **`ZE10019` (cannot create Build ID):** appeared while the folder was not a git repository, so Zephyr guessed the organization and project. Creating the git repo and its GitHub remote fixed it.
 - **`ZE40003` (cannot resolve app name with version):** the host could not resolve the remote with `@latest`. Exact versions and semver ranges resolve correctly; I did not confirm why the `latest` tag is missing (my guess is that tags must be created in the Zephyr dashboard first).
 - **Remote not deployed before the host:** the host build cannot resolve a remote that does not exist yet, hence the build order.
