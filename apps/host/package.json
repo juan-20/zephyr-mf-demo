@@ -22,6 +22,6 @@
   },
   "version": "0.1.0",
   "zephyr:dependencies": {
-    "remote": "zephyr:remote@0.1.0"
+    "remote": "zephyr:remote@>=0.1.0 <1.0.0"
   }
 }
