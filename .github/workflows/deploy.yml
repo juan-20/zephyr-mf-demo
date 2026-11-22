@@ -59,6 +59,8 @@ jobs:
       # manually to deploy to production. Deploying through CI (not only promoting in the
       # dashboard) is what writes the remote dependencies into the environment manifest.
       SHELL_ZE_ENV: ${{ inputs.environment || 'staging' }}
+      # Remotes always deploy to their staging environment; the shell follows them.
+      ZE_ENV: staging
       # Build-time fallback only. Each environment overrides it in the Zephyr dashboard.
       ZE_PUBLIC_API_URL: https://zephyr-mf-demo-api-staging.onrender.com
     steps:

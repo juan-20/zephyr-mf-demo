@@ -32,8 +32,8 @@
   },
   "version": "0.1.0",
   "zephyr:dependencies": {
-    "auth": "zephyr:auth@web_latest_juanalvesandrade",
-    "feed": "zephyr:feed@web_latest_juanalvesandrade",
-    "composer": "zephyr:composer@web_latest_juanalvesandrade"
+    "auth": "zephyr:auth@staging",
+    "feed": "zephyr:feed@staging",
+    "composer": "zephyr:composer@staging"
   }
 }
