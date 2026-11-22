@@ -19,6 +19,22 @@ services:
           name: zephyr-mf-demo-db
           property: connectionString
 
+  # Staging API: no DATABASE_URL, so it uses a throwaway SQLite file (reset on every deploy).
+  - type: web
+    name: zephyr-mf-demo-api-staging
+    runtime: node
+    plan: free
+    buildCommand: npm ci --include=dev && npm run build -w api
+    startCommand: npm run start -w api
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: JWT_SECRET
+        generateValue: true
+
 databases:
   - name: zephyr-mf-demo-db
     plan: free
