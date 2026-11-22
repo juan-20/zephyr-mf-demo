@@ -51,5 +51,8 @@ jobs:
 
       - name: Build and deploy shell
         env:
-          ZE_PUBLIC_API_URL: https://zephyr-mf-demo-api.onrender.com
+          # Every push lands in staging; production is promoted from the Zephyr dashboard.
+          ZE_ENV: staging
+          # Build-time fallback only. Each environment overrides it in the Zephyr dashboard.
+          ZE_PUBLIC_API_URL: https://zephyr-mf-demo-api-staging.onrender.com
         run: npm run build -w shell
