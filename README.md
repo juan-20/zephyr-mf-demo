@@ -83,3 +83,5 @@ For CI, create a token in the Zephyr dashboard (Settings → Tokens → CI Token
 - Error codes link to docs, which helps, but `ZE10019` gave no actionable reason in the log. Surfacing the underlying cause (for example, unknown organization or missing git remote) would save time.
 - The dependency selector syntax is easy to get wrong: the docs show both short names and full application UIDs, and which one applies depends on whether the apps share a repository. A worked monorepo example would help.
 - Unclear to me: how tags such as `latest` get created without the dashboard. A CLI or docs path for that would complete the story.
+
+> CI note: pushes deploy only the apps that changed (see `.github/workflows/deploy.yml`).
