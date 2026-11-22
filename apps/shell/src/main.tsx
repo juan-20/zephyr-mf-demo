@@ -1,8 +1,12 @@
 import { createRoot } from 'react-dom/client';
 import { configureApi, useSession } from '@repo/store';
 import App from './App';
+import { resolveApiUrl } from './runtime-config';
 
-configureApi(import.meta.env.VITE_API_URL ?? 'http://localhost:3000');
-void useSession.getState().restore();
+async function bootstrap() {
+  configureApi(await resolveApiUrl());
+  void useSession.getState().restore();
+  createRoot(document.getElementById('root')!).render(<App />);
+}
 
-createRoot(document.getElementById('root')!).render(<App />);
+void bootstrap();

@@ -35,5 +35,6 @@ export default defineConfig({
     }),
     withZephyr(),
   ],
+  envPrefix: ['VITE_', 'ZE_PUBLIC_'],
   build: { target: 'chrome89' },
 });
