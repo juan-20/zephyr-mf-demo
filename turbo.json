@@ -21,6 +21,13 @@
         "^build"
       ],
       "outputs": []
+    },
+    "deploy": {
+      "dependsOn": [
+        "^deploy"
+      ],
+      "cache": false
     }
-  }
+  },
+  "envMode": "loose"
 }
