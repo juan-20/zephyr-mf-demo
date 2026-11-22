@@ -10,7 +10,7 @@ export function jwtSecret(): string {
 // Zephyr serves every deploy from its own origin, so allow the deploy URLs
 // of this project by pattern instead of a fixed list.
 const DEFAULT_PATTERN =
-  '^https://[a-z0-9]+-\d+-[a-z0-9-]+-zephyr-mf-demo-juan-20-[a-z0-9]+-ze\.zephyrcloud\.app$';
+  String.raw`^https://[a-z0-9]+-\d+-[a-z0-9-]+-zephyr-mf-demo-juan-[a-z0-9-]*-ze\.zephyrcloud\.app$`;
 
 export function isAllowedOrigin(origin: string | undefined): boolean {
   if (!origin) return true; // same-origin tools, curl, tests
