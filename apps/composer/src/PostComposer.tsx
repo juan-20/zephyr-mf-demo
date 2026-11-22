@@ -9,6 +9,8 @@ export default function PostComposer() {
   const [content, setContent] = useState('');
   const [busy, setBusy] = useState(false);
   const trimmed = content.trim();
+  const counterClass =
+    content.length >= MAX ? 'counter counter--max' : content.length >= MAX - 20 ? 'counter counter--warn' : 'counter';
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -19,24 +21,24 @@ export default function PostComposer() {
   };
 
   return (
-    <Panel title="New post">
-      <form onSubmit={(e) => void submit(e)} style={{ display: 'grid', gap: 8 }}>
-        <label>
-          <span style={{ position: 'absolute', left: -9999 }}>Post content</span>
+    <Panel>
+      <form onSubmit={(e) => void submit(e)} className="stack stack--tight">
+        <label className="field">
+          <span className="sr-only">Post content</span>
           <textarea
+            className="textarea"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             maxLength={MAX}
             rows={3}
             placeholder="What is on your mind?"
-            style={{ width: '100%', boxSizing: 'border-box' }}
           />
         </label>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <small aria-live="polite">
+        <div className="composer__footer">
+          <small className={counterClass} aria-live="polite">
             {content.length}/{MAX}
           </small>
-          <button type="submit" disabled={!trimmed || busy}>
+          <button type="submit" className="btn btn--primary" disabled={!trimmed || busy}>
             {busy ? 'Posting…' : 'Post'}
           </button>
         </div>

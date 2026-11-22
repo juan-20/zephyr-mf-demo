@@ -7,7 +7,7 @@ import { withZephyr } from 'vite-plugin-zephyr';
 // shares one process environment, so the target is passed as SHELL_ZE_ENV and mapped here.
 if (process.env.SHELL_ZE_ENV) process.env.ZE_ENV = process.env.SHELL_ZE_ENV;
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     federation({
@@ -37,8 +37,8 @@ export default defineConfig({
         '@repo/store': { singleton: true },
       },
     }),
-    withZephyr(),
+    // Deploying is a build side effect; the dev server stays fully local.
+    ...(command === 'build' ? [withZephyr()] : []),
   ],
-  envPrefix: ['VITE_', 'ZE_PUBLIC_'],
   build: { target: 'chrome89' },
-});
+}));

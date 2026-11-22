@@ -6,14 +6,18 @@ export function RemoteSlot({ name, children }: { name: string; children: ReactNo
   return (
     <ErrorBoundary
       fallback={(error, reset) => (
-        <div role="alert" style={{ border: '1px solid #c33', borderRadius: 8, padding: 16 }}>
-          <strong>{name} is unavailable.</strong>
+        <div role="alert" className="alert">
+          <strong>{name} is unavailable</strong>
           <p>{error.message}</p>
-          <button onClick={reset}>Retry</button>
+          <button className="btn btn--ghost" onClick={reset}>
+            Retry
+          </button>
         </div>
       )}
     >
-      <Suspense fallback={<p aria-busy="true">Loading {name}…</p>}>{children}</Suspense>
+      <Suspense fallback={<p className="loading" aria-busy="true">Loading {name}…</p>}>
+        {children}
+      </Suspense>
     </ErrorBoundary>
   );
 }

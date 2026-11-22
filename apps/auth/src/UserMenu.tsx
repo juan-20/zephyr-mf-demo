@@ -5,9 +5,14 @@ export default function UserMenu() {
   const logout = useSession((s) => s.logout);
   if (!user) return null;
   return (
-    <span style={{ display: 'inline-flex', gap: 12, alignItems: 'center' }}>
-      Signed in as <strong>{user.username}</strong>
-      <button onClick={() => void logout()}>Log out</button>
+    <span className="user-menu">
+      <span>
+        <span className="user-menu__label">Signed in as </span>
+        <strong>{user.username}</strong>
+      </span>
+      <button className="btn btn--ghost" onClick={() => void logout()}>
+        Log out
+      </button>
     </span>
   );
 }

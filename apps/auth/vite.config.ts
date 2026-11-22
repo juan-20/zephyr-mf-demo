@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { federation } from '@module-federation/vite';
 import { withZephyr } from 'vite-plugin-zephyr';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     react(),
     federation({
@@ -20,8 +20,9 @@ export default defineConfig({
         '@repo/store': { singleton: true },
       },
     }),
-    withZephyr(),
+    // Deploying is a build side effect; the dev server stays fully local.
+    ...(command === 'build' ? [withZephyr()] : []),
   ],
   server: { cors: true, origin: 'http://localhost:5174' },
   build: { target: 'chrome89' },
-});
+}));

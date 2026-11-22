@@ -10,7 +10,7 @@ const PostComposer = lazy(() => import('composer/PostComposer'));
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const status = useSession((s) => s.status);
-  if (status === 'unknown') return <p aria-busy="true">Checking session…</p>;
+  if (status === 'unknown') return <p className="loading" aria-busy="true">Checking session…</p>;
   return status === 'authed' ? children : <Navigate to="/login" replace />;
 }
 
@@ -26,7 +26,7 @@ function LoginPage() {
 
 function Home() {
   return (
-    <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+    <div className="stack">
       <RemoteSlot name="Composer">
         <PostComposer />
       </RemoteSlot>
@@ -40,26 +40,31 @@ function Home() {
 export default function App() {
   return (
     <HashRouter>
-      <main style={{ fontFamily: 'system-ui', maxWidth: 640, margin: '2rem auto', padding: '0 16px' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h1 style={{ margin: 0 }}>Feed</h1>
+      <div className="app">
+        <header className="app-header">
+          <h1 className="brand brand-heading">
+            <span className="brand-mark" aria-hidden="true" />
+            Feed
+          </h1>
           <RemoteSlot name="Account">
             <UserMenu />
           </RemoteSlot>
         </header>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/"
-            element={
-              <RequireAuth>
-                <Home />
-              </RequireAuth>
-            }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </main>
+        <main>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/"
+              element={
+                <RequireAuth>
+                  <Home />
+                </RequireAuth>
+              }
+            />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+      </div>
     </HashRouter>
   );
 }

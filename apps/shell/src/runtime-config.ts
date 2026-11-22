@@ -5,8 +5,11 @@ const FALLBACK_API_URL = 'http://localhost:3000';
  *
  * Zephyr writes every ZE_PUBLIC_* variable into /zephyr-manifest.json and serves the
  * values of the environment the page is loaded from (production, staging, ...), so the
- * same build can talk to different APIs without a rebuild. The build-time value is only
- * a fallback for local development, where the manifest does not exist.
+ * same build can talk to different APIs without a rebuild. Local development has no
+ * manifest and uses the fallback.
+ *
+ * Do not read ZE_PUBLIC_* through import.meta.env here: the Zephyr plugin rewrites those
+ * reads into an import that only resolves on a deployed page, which breaks the dev server.
  */
 export async function resolveApiUrl(): Promise<string> {
   try {
@@ -17,7 +20,7 @@ export async function resolveApiUrl(): Promise<string> {
       if (url) return url;
     }
   } catch {
-    // No manifest (local dev server serves index.html here): use the fallback below.
+    // No manifest (the dev server answers with index.html): use the fallback below.
   }
-  return import.meta.env.ZE_PUBLIC_API_URL ?? FALLBACK_API_URL;
+  return FALLBACK_API_URL;
 }

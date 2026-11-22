@@ -38,7 +38,7 @@ Both APIs sleep when idle (Render's free tier), so the first request can take ab
 |---|---|
 | `@repo/store` | Zustand store (session and posts) plus the API client. Shared as a federation **singleton**, so every remote sees the same state. |
 | `@repo/types` | `User`, `Post` and request types, shared by the API and the frontends. |
-| `@repo/ui` | Small shared components. |
+| `@repo/ui` | The theme (design tokens, fonts, component classes) and small shared components. |
 | `@repo/config` | Base `tsconfig`. |
 
 The remotes never import each other. They communicate through the store: `auth` writes the session, `composer` calls `createPost`, and `feed` re-renders from the same state. Each remote loads inside a `RemoteSlot` (an error boundary plus `Suspense`), so a failed remote shows a message with a retry button and does not take the shell down.
@@ -51,7 +51,11 @@ npm run dev     # shell :5173, auth :5174, feed :5175, composer :5176, API :3000
 npm test        # API e2e tests and store unit tests
 ```
 
-The API uses a local SQLite file when `DATABASE_URL` is not set. Local builds also work without a Zephyr login, but then nothing is deployed.
+The API uses a local SQLite file when `DATABASE_URL` is not set. The dev servers are fully local: the Zephyr plugin only runs on `vite build`, so the shell loads the remotes from `localhost` and nothing is deployed. A local build also works without a Zephyr login, but then nothing is deployed either.
+
+## Design
+
+The look is a dark theme with a crimson-to-coral brand gradient, defined once in [theme.css](packages/ui/src/theme.css): color tokens, Plus Jakarta Sans for headings, Inter for text and JetBrains Mono for metadata such as timestamps and counters. The **shell loads the stylesheet once**, and the remotes only use its class names (`.btn`, `.input`, `.post`, ...). That way styling never depends on whether a remote's own CSS gets injected when it loads. Each remote also imports the theme in its standalone preview.
 
 ## How Zephyr is used
 
@@ -129,6 +133,7 @@ Security: bcrypt password hashes, a JWT in an `HttpOnly; Secure; SameSite=None` 
 | `ZE40003` | `@latest` pointed to a tag that does not exist. The automatic tag is named `web_latest_<user>`. |
 | `process.env.ZE_PUBLIC_*` did nothing | In this plugin version it compiled to `undefined` or to the fallback. The manifest is read explicitly instead. |
 | CORS blocked the deployed apps (twice) | Zephyr truncates long hostnames, and environment URLs have a different shape from version URLs. Fixed the pattern and added tests with real URLs. |
+| Local dev showed a blank page | Reading `import.meta.env.ZE_PUBLIC_*` in source made the Zephyr plugin emit an `import "env:vars:..."` that only resolves on a deployed page. The code no longer reads those variables, and the plugin only runs on build. |
 | `500` on sign-up in dev | `tsx` does not emit decorator metadata, so NestJS injection broke. The dev script uses `ts-node`. |
 | Render build failed | `NODE_ENV=production` skips dev dependencies, which removed the type packages. The build uses `npm ci --include=dev`. |
 

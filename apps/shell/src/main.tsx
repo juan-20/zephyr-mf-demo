@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
 import { configureApi, useSession } from '@repo/store';
+import '@repo/ui/theme.css';
 import App from './App';
 import { resolveApiUrl } from './runtime-config';
 

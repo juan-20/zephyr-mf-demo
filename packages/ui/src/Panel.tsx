@@ -1,9 +1,17 @@
 import type { ReactNode } from 'react';
 
-export function Panel({ title, children }: { title: string; children: ReactNode }) {
+export function Panel({
+  title,
+  children,
+  className = '',
+}: {
+  title?: string;
+  children: ReactNode;
+  className?: string;
+}) {
   return (
-    <section style={{ border: '1px solid #888', borderRadius: 8, padding: 16 }}>
-      <h2 style={{ marginTop: 0 }}>{title}</h2>
+    <section className={`ui-panel ${className}`.trim()}>
+      {title && <h2 className="ui-panel__title">{title}</h2>}
       {children}
     </section>
   );
