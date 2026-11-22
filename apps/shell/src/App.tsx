@@ -1,25 +1,60 @@
-import { lazy, Suspense } from 'react';
-import { ErrorBoundary } from './ErrorBoundary';
+import { lazy, type ReactNode } from 'react';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useSession } from '@repo/store';
+import { RemoteSlot } from './RemoteSlot';
 
-const RemoteCard = lazy(() => import('remote/Card'));
+const LoginForm = lazy(() => import('auth/LoginForm'));
+const UserMenu = lazy(() => import('auth/UserMenu'));
+
+function RequireAuth({ children }: { children: ReactNode }) {
+  const status = useSession((s) => s.status);
+  if (status === 'unknown') return <p aria-busy="true">Checking session…</p>;
+  return status === 'authed' ? children : <Navigate to="/login" replace />;
+}
+
+function LoginPage() {
+  const status = useSession((s) => s.status);
+  if (status === 'authed') return <Navigate to="/" replace />;
+  return (
+    <RemoteSlot name="Login">
+      <LoginForm />
+    </RemoteSlot>
+  );
+}
+
+function Home() {
+  const user = useSession((s) => s.user);
+  return (
+    <section>
+      <h2>Welcome, {user?.username}</h2>
+      <p>The feed arrives in the next phase.</p>
+    </section>
+  );
+}
 
 export default function App() {
   return (
-    <main style={{ fontFamily: 'system-ui', maxWidth: 640, margin: '2rem auto' }}>
-      <h1>Host application</h1>
-      <ErrorBoundary
-        fallback={(error, reset) => (
-          <div role="alert" style={{ border: '1px solid #c33', borderRadius: 8, padding: 16 }}>
-            <strong>The remote is unavailable.</strong>
-            <p>{error.message}</p>
-            <button onClick={reset}>Retry</button>
-          </div>
-        )}
-      >
-        <Suspense fallback={<p aria-busy="true">Loading remote…</p>}>
-          <RemoteCard title="Card from remote" />
-        </Suspense>
-      </ErrorBoundary>
-    </main>
+    <HashRouter>
+      <main style={{ fontFamily: 'system-ui', maxWidth: 640, margin: '2rem auto', padding: '0 16px' }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ margin: 0 }}>Feed</h1>
+          <RemoteSlot name="Account">
+            <UserMenu />
+          </RemoteSlot>
+        </header>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <Home />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </HashRouter>
   );
 }

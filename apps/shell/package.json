@@ -11,7 +11,10 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@repo/ui": "*",
-    "@repo/types": "*"
+    "@repo/types": "*",
+    "@repo/store": "*",
+    "zustand": "^5.0.0",
+    "react-router-dom": "^7.0.0"
   },
   "devDependencies": {
     "@module-federation/vite": "^1.13.2",
@@ -25,6 +28,6 @@
   },
   "version": "0.1.0",
   "zephyr:dependencies": {
-    "remote": "zephyr:remote@>=0.1.0 <1.0.0"
+    "auth": "zephyr:auth@>=0.1.0 <1.0.0"
   }
 }

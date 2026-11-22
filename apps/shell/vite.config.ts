@@ -7,18 +7,20 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'host',
+      name: 'shell',
       remotes: {
         // In Zephyr builds this entry is resolved to the deployed remote.
-        remote: {
+        auth: {
           type: 'module',
-          name: 'remote',
+          name: 'auth',
           entry: 'http://localhost:5174/remoteEntry.js',
         },
       },
       shared: {
         react: { singleton: true },
         'react-dom': { singleton: true },
+        zustand: { singleton: true },
+        '@repo/store': { singleton: true },
       },
     }),
     withZephyr(),

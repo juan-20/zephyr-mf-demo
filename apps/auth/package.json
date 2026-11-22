@@ -1,5 +1,5 @@
 {
-  "name": "remote",
+  "name": "auth",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,7 +11,9 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "@repo/ui": "*",
-    "@repo/types": "*"
+    "@repo/types": "*",
+    "@repo/store": "*",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@module-federation/vite": "^1.13.2",
@@ -23,5 +25,5 @@
     "vite-plugin-zephyr": "^1.8.0",
     "@repo/config": "*"
   },
-  "version": "0.2.0"
+  "version": "0.1.0"
 }

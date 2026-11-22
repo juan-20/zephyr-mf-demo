@@ -7,12 +7,17 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'remote',
+      name: 'auth',
       filename: 'remoteEntry.js',
-      exposes: { './Card': './src/Card.tsx' },
+      exposes: {
+        './LoginForm': './src/LoginForm.tsx',
+        './UserMenu': './src/UserMenu.tsx',
+      },
       shared: {
         react: { singleton: true },
         'react-dom': { singleton: true },
+        zustand: { singleton: true },
+        '@repo/store': { singleton: true },
       },
     }),
     withZephyr(),
