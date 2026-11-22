@@ -50,4 +50,6 @@ jobs:
         run: npm run build -w composer
 
       - name: Build and deploy shell
+        env:
+          VITE_API_URL: https://zephyr-mf-demo-api.onrender.com
         run: npm run build -w shell
