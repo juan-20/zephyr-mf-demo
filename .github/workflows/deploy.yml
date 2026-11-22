@@ -1,8 +1,9 @@
-name: Deploy to Zephyr
+name: CI and deploy
 
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
     inputs:
       environment:
@@ -15,14 +16,51 @@ permissions:
   contents: read
 
 concurrency:
-  group: deploy-${{ github.ref }}
-  cancel-in-progress: false
+  group: ci-${{ github.ref }}
+  # Never cancel a deploy half way; superseded pull request runs are safe to cancel.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  check:
+    name: Typecheck and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Turborepo needs history to compare against the base commit
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Restore Turborepo cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: turbo-${{ runner.os }}-
+
+      - run: npm ci
+
+      - name: Typecheck and test
+        run: npx turbo run typecheck test
+
   deploy:
+    name: Deploy to Zephyr
+    needs: check
+    # Pull requests are checked, never deployed: the shell resolves remotes by tag, so a
+    # deploy from an unreviewed branch could end up serving real traffic.
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     env:
       ZE_CI_TOKEN: ${{ secrets.ZE_CI_TOKEN }}
+      # Only the shell has Zephyr environments. Pushes land in staging; run this workflow
+      # manually to deploy to production. Deploying through CI (not only promoting in the
+      # dashboard) is what writes the remote dependencies into the environment manifest.
+      SHELL_ZE_ENV: ${{ inputs.environment || 'staging' }}
+      # Build-time fallback only. Each environment overrides it in the Zephyr dashboard.
+      ZE_PUBLIC_API_URL: https://zephyr-mf-demo-api-staging.onrender.com
     steps:
       # The Zephyr plugin only logs auth errors and exits 0, so fail loudly here.
       - name: Require Zephyr CI token
@@ -39,28 +77,14 @@ jobs:
 
       - run: npm ci
 
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Test
-        run: npm test
-
-      # The remotes must be deployed first so the shell can resolve it.
-      - name: Build and deploy auth
-        run: npm run build -w auth
-
-      - name: Build and deploy feed
-        run: npm run build -w feed
-
-      - name: Build and deploy composer
-        run: npm run build -w composer
-
-      - name: Build and deploy shell
-        env:
-          # Pushes land in staging. Run the workflow manually to deploy to production.
-          # Deploying through CI (not only promoting in the dashboard) is what writes the
-          # remote dependencies into the environment manifest.
-          ZE_ENV: ${{ inputs.environment || 'staging' }}
-          # Build-time fallback only. Each environment overrides it in the Zephyr dashboard.
-          ZE_PUBLIC_API_URL: https://zephyr-mf-demo-api-staging.onrender.com
-        run: npm run build -w shell
+      # The shell lists its remotes as dependencies, so Turborepo deploys them first and
+      # redeploys the shell whenever one of them changes. A push deploys only what changed
+      # since the previous commit; a manual run deploys everything.
+      - name: Deploy affected apps
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ "${{ github.event_name }}" = "push" ] && [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ]; then
+            npx turbo run deploy --only --filter="...[$BEFORE]"
+          else
+            npx turbo run deploy
+          fi
