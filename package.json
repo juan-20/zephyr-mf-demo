@@ -2,7 +2,10 @@
   "name": "zephyr-mf-demo",
   "private": true,
   "packageManager": "npm@10.9.2",
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",

@@ -36,9 +36,9 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      # The remote must be deployed first so the host can resolve it.
+      # The remote must be deployed first so the shell can resolve it.
       - name: Build and deploy remote
         run: npm run build -w remote
 
-      - name: Build and deploy host
-        run: npm run build -w host
+      - name: Build and deploy shell
+        run: npm run build -w shell

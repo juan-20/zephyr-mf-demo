@@ -1,5 +1,5 @@
 {
-  "name": "host",
+  "name": "shell",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@repo/ui": "*",
+    "@repo/types": "*"
   },
   "devDependencies": {
     "@module-federation/vite": "^1.13.2",
@@ -18,7 +20,8 @@
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "^5.9.0",
     "vite": "^7.0.0",
-    "vite-plugin-zephyr": "^1.8.0"
+    "vite-plugin-zephyr": "^1.8.0",
+    "@repo/config": "*"
   },
   "version": "0.1.0",
   "zephyr:dependencies": {

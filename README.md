@@ -25,7 +25,7 @@ Each URL is an immutable snapshot of one build. The host page shows the remote's
 ```
 
 - `apps/remote` exposes `./Card` through `@module-federation/vite` and shares `react` / `react-dom` as singletons.
-- `apps/host` declares the remote and lazy-loads `remote/Card` behind `Suspense` and an `ErrorBoundary` (with a retry button) so a failed remote does not take the shell down.
+- `apps/shell` declares the remote and lazy-loads `remote/Card` behind `Suspense` and an `ErrorBoundary` (with a retry button) so a failed remote does not take the shell down.
 - Turborepo + npm workspaces orchestrate the two apps.
 
 ## Implementation and deployment process
@@ -53,7 +53,7 @@ Deploy manually (the first run opens a browser to sign in to Zephyr):
 
 ```bash
 npm run build -w remote    # remote first, so the host can resolve it
-npm run build -w host
+npm run build -w shell
 ```
 
 For CI, create a token in the Zephyr dashboard (Settings → Tokens → CI Tokens) and add it as the repository secret `ZE_CI_TOKEN`.
