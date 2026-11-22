@@ -39,7 +39,7 @@ export default function Feed() {
         </p>
       )}
       {posts.length === 0 && !error ? (
-        <p>No posts yet. Be the first to write one.</p>
+        <p>No posts yet. Write the first one!</p>
       ) : (
         <ul style={{ padding: 0, margin: 0, display: 'grid', gap: 12 }}>
           {posts.map((p) => (
