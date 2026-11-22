@@ -4,6 +4,12 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      environment:
+        description: Zephyr environment to deploy the shell to
+        type: choice
+        options: [staging, production]
+        default: staging
 
 permissions:
   contents: read
@@ -51,8 +57,10 @@ jobs:
 
       - name: Build and deploy shell
         env:
-          # Every push lands in staging; production is promoted from the Zephyr dashboard.
-          ZE_ENV: staging
+          # Pushes land in staging. Run the workflow manually to deploy to production.
+          # Deploying through CI (not only promoting in the dashboard) is what writes the
+          # remote dependencies into the environment manifest.
+          ZE_ENV: ${{ inputs.environment || 'staging' }}
           # Build-time fallback only. Each environment overrides it in the Zephyr dashboard.
           ZE_PUBLIC_API_URL: https://zephyr-mf-demo-api-staging.onrender.com
         run: npm run build -w shell
