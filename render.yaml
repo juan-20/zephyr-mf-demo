@@ -1,0 +1,22 @@
+# Render Blueprint: NestJS API + managed Postgres.
+services:
+  - type: web
+    name: zephyr-mf-demo-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build -w api
+    startCommand: npm run start -w api
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zephyr-mf-demo-db
+          property: connectionString
+
+databases:
+  - name: zephyr-mf-demo-db
+    plan: free
