@@ -28,6 +28,8 @@
   },
   "version": "0.1.0",
   "zephyr:dependencies": {
-    "auth": "zephyr:auth@>=0.1.0 <1.0.0"
+    "auth": "zephyr:auth@>=0.1.0 <1.0.0",
+    "feed": "zephyr:feed@>=0.1.0 <1.0.0",
+    "composer": "zephyr:composer@>=0.1.0 <1.0.0"
   }
 }

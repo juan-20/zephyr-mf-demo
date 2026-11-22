@@ -5,6 +5,8 @@ import { RemoteSlot } from './RemoteSlot';
 
 const LoginForm = lazy(() => import('auth/LoginForm'));
 const UserMenu = lazy(() => import('auth/UserMenu'));
+const Feed = lazy(() => import('feed/Feed'));
+const PostComposer = lazy(() => import('composer/PostComposer'));
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const status = useSession((s) => s.status);
@@ -23,12 +25,15 @@ function LoginPage() {
 }
 
 function Home() {
-  const user = useSession((s) => s.user);
   return (
-    <section>
-      <h2>Welcome, {user?.username}</h2>
-      <p>The feed arrives in the next phase.</p>
-    </section>
+    <div style={{ display: 'grid', gap: 16, marginTop: 16 }}>
+      <RemoteSlot name="Composer">
+        <PostComposer />
+      </RemoteSlot>
+      <RemoteSlot name="Feed">
+        <Feed />
+      </RemoteSlot>
+    </div>
   );
 }
 

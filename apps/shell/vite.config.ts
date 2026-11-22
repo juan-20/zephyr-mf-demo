@@ -15,6 +15,16 @@ export default defineConfig({
           name: 'auth',
           entry: 'http://localhost:5174/remoteEntry.js',
         },
+        feed: {
+          type: 'module',
+          name: 'feed',
+          entry: 'http://localhost:5175/remoteEntry.js',
+        },
+        composer: {
+          type: 'module',
+          name: 'composer',
+          entry: 'http://localhost:5176/remoteEntry.js',
+        },
       },
       shared: {
         react: { singleton: true },

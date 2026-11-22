@@ -43,5 +43,11 @@ jobs:
       - name: Build and deploy auth
         run: npm run build -w auth
 
+      - name: Build and deploy feed
+        run: npm run build -w feed
+
+      - name: Build and deploy composer
+        run: npm run build -w composer
+
       - name: Build and deploy shell
         run: npm run build -w shell
