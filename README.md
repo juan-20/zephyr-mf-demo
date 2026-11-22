@@ -117,7 +117,7 @@ Security: bcrypt password hashes, a JWT in an `HttpOnly; Secure; SameSite=None` 
 
 ## Known limitations
 
-- **Environment URLs serve old remote versions.** The staging and production manifests keep listing the first remote builds they were given, even after the remotes are redeployed. The shell's own version URL follows the tag and is always current. I did not find the cause. Selecting the remotes by environment (`auth@staging`) resolved to empty URLs, so I reverted that.
+- **The staging environment serves old remote versions.** Its manifest lists frozen version URLs (the first remote builds it was given), even after the remotes are redeployed. The production environment's manifest lists the moving tag URLs and always shows the newest remotes, and so does the shell's own version URL. The one difference I found in the dashboard is that staging is the project's *default environment* and production is not. I have not confirmed that this is the cause, and I also clicked in staging's Dependencies panel while investigating. Selecting the remotes by environment (`auth@staging`) resolved to empty URLs, so I reverted that.
 - **Promoting in the dashboard is not enough.** Promoting a shell version to production copies its variables but not its remote dependencies, leaving the page without remotes. Production is therefore deployed through the manual CI run.
 - **The Dependencies panel of an environment is a read-only preview.** Selecting a version there saves nothing.
 - Built bundles preload the `localhost` remote entries first, which fail harmlessly before the manifest takes over.
