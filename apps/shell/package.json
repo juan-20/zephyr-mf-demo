@@ -30,10 +30,10 @@
     "feed": "*",
     "composer": "*"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
   "zephyr:dependencies": {
-    "auth": "zephyr:auth@staging",
-    "feed": "zephyr:feed@staging",
-    "composer": "zephyr:composer@staging"
+    "auth": "zephyr:auth@web_latest_juanalvesandrade",
+    "feed": "zephyr:feed@web_latest_juanalvesandrade",
+    "composer": "zephyr:composer@web_latest_juanalvesandrade"
   }
 }
