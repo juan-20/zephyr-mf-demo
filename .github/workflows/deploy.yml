@@ -55,9 +55,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ZE_CI_TOKEN: ${{ secrets.ZE_CI_TOKEN }}
-      # Only the shell has Zephyr environments. Pushes land in staging; run this workflow
-      # manually to deploy to production. Deploying through CI (not only promoting in the
-      # dashboard) is what writes the remote dependencies into the environment manifest.
+      # Pushes land in staging; run this workflow manually to deploy the shell to production.
+      # Deploying through CI (not only promoting in the dashboard) is what writes the remote
+      # dependencies into the environment manifest.
       SHELL_ZE_ENV: ${{ inputs.environment || 'staging' }}
       # Remotes always deploy to their staging environment; the shell follows them.
       ZE_ENV: staging
